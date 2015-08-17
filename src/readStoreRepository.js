@@ -3,7 +3,6 @@
  */
 
 var pgbluebird = require('pg-bluebird');
-var Promise = require('bluebird');
 var uuid = require('uuid');
 var JSON = require('JSON');
 var extend = require('extend');

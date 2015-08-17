@@ -4,7 +4,7 @@
 
 var extend = require('extend');
 var yowlWrapper = require('yowlWrapper');
-var readStoreRepository = require('readStoreRepository');
+var readStoreRepository = require('./readStoreRepository');
 
 module.exports = function index(_options) {
     var options = {
@@ -20,5 +20,7 @@ module.exports = function index(_options) {
     extend(options, _options || {});
 
     var logger = yowlWrapper(options.logger);
-    return readStoreRepository(logger, options.readStoreRepository);
+    return options.unitTest
+    ? require('./pgbluebirdMock')
+    : readStoreRepository(logger, {postgres:options.postgres});
 };
