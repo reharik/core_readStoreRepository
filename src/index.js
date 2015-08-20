@@ -3,7 +3,7 @@
  */
 
 var extend = require('extend');
-var yowlWrapper = require('yowlWrapper');
+var yowlWrapper = require('yowlwrapper');
 var readStoreRepository = require('./readStoreRepository');
 
 module.exports = function index(_options) {
