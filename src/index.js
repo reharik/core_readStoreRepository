@@ -21,6 +21,6 @@ module.exports = function index(_options) {
 
     var logger = yowlWrapper(options.logger);
     return options.unitTest
-    ? require('./pgbluebirdMock')
-    : readStoreRepository(logger, {postgres:options.postgres});
+        ? require('./pgbluebirdMock')
+        : readStoreRepository(logger, {postgres:options.postgres});
 };

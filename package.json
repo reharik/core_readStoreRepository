@@ -18,8 +18,7 @@
     "pg-bluebird": "^1.0.8",
     "uuid": "^2.0.1",
     "extend": "^3.0.0",
-    "yowlWrapper": "git+https://github.com/reharik/core_yowlWrapper.git",
-    "readStoreRepository":"git+https://github.com/reharik/core_readStoreRepository.git"
+    "yowlWrapper": "git+https://github.com/reharik/core_yowlWrapper.git"
 
   },
   "devDependencies": {
