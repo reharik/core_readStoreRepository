@@ -5,7 +5,7 @@
 var Promise = require('bluebird');
 var mock = function() {
     return {
-        getById: this.getById,
+        getById: getById,
         save: save,
         query: query,
         checkIdempotency: checkIdempotency,
