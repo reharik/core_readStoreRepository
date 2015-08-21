@@ -5,11 +5,11 @@
 var Promise = require('bluebird');
 var mock = function() {
     return {
-        getById: getById,
-        save: save,
-        query: query,
-        checkIdempotency: checkIdempotency,
-        recordEventProcessed: recordEventProcessed
+        getById: mock.getById,
+        save: mock.save,
+        query: mock.query,
+        checkIdempotency: mock.checkIdempotency,
+        recordEventProcessed: mock.recordEventProcessed
     }
 };
 
