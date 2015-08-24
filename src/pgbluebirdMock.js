@@ -26,7 +26,7 @@ mock.prototype.query=function(script) {
 };
 
 mock.prototype.checkIdempotency=function(originalPosition, eventHandlerName) {
-    return Promise.resolve('success');
+    return Promise.resolve({isIdempotent:true});
 };
 
 mock.prototype.recordEventProcessed=function(originalPosition, eventHandlerName, isNewSteam) {
