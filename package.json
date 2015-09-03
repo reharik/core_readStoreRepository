@@ -1,25 +1,31 @@
 {
   "name": "readstorerepository",
   "version": "0.0.1",
+  "private": false,
+  "description": "core_readStoreRepository",
+  "homepage": "https://github.com/reharik/core_readStoreRepository#readme",
   "main": "src/index.js",
   "scripts": {
-    "start":"babel-node --harmony src/index.js --stage 0",
-    "test": "mocha --opts tests/mocha.opts tests/unitTests",
-    "testSpecific": "mocha --opts tests/mocha.opts ",
-    "testDebug": "node-debug _mocha --timeout 15000 --opts tests/mocha.opts unitTests",
-    "intTest": "mocha --opts integrationTests/mocha.opts --opts tests/mocha.opts",
-    "intTestSpecific": "mocha --opts tests/mocha.opts "
+    "test": "mocha --require ./babelhook --opts ./tests/mocha.opts ./tests/unitTests/*.js"
   },
+  "bugs": {
+    "url": "https://github.com/reharik/core_readStoreRepository/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reharik/core_readStoreRepository.git"
+  },
+  "keywords": [
+  ],
+  "author": "Raif Harik",
   "license": "MIT",
-  "node": ">=0.12.0",
-  "dependencies": {
+   "dependencies": {
     "JSON": "^1.0.0",
     "bluebird": "^2.9.27",
     "pg-bluebird": "^1.0.8",
     "uuid": "^2.0.1",
     "extend": "^3.0.0",
     "yowlwrapper": "git+https://github.com/reharik/core_yowlWrapper.git"
-
   },
   "devDependencies": {
     "babel": "^5.5.6",

@@ -1,0 +1,2 @@
+#core_readStoreRepository
+Your plugin description
