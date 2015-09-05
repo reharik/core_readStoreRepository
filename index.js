@@ -1,0 +1,24 @@
+/**
+ * Created by parallels on 9/5/15.
+ */
+var extend = require('extend');
+
+module.exports = function(_options) {
+    var options = {
+        "postgres": {
+            "connectionString": "postgres://postgres:password@postgres/",
+            "postgres": "postgres",
+            "methodFitness": "MethodFitness"
+        },
+        logger: {
+            moduleName: 'ReadStoreRepository'
+        }
+    };
+    extend(options, _options || {});
+
+    var container = require('./registry')(options);
+    var repo = container.getInstanceOf('readStoreRepository');
+    return repo(options);
+};
+
+

@@ -15,17 +15,17 @@
     "type": "git",
     "url": "git+https://github.com/reharik/core_readStoreRepository.git"
   },
-  "keywords": [
-  ],
+  "keywords": [],
   "author": "Raif Harik",
   "license": "MIT",
-   "dependencies": {
+  "dependencies": {
     "JSON": "^1.0.0",
     "bluebird": "^2.9.27",
+    "dagon": "^0.1.0",
+    "extend": "^3.0.0",
     "pg-bluebird": "^1.0.8",
     "uuid": "^2.0.1",
-    "extend": "^3.0.0",
-    "yowlwrapper": "git+https://github.com/reharik/core_yowlWrapper.git"
+    "corelogger": "git+https://github.com/reharik/core_logger.git"
   },
   "devDependencies": {
     "babel": "^5.5.6",
