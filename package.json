@@ -4,7 +4,7 @@
   "private": false,
   "description": "core_readStoreRepository",
   "homepage": "https://github.com/reharik/core_readStoreRepository#readme",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "test": "mocha --require ./babelhook --opts ./tests/mocha.opts ./tests/unitTests/*.js"
   },
