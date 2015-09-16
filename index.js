@@ -17,9 +17,7 @@ module.exports = function(_options) {
     extend(options, _options || {});
 
     var container = require('./registry')(options);
-    var repo = container.getInstanceOf('readStoreRepository');
-    console.log('uh...here? ')
-    return repo(options);
+    return container.getInstanceOf('readStoreRepository');
 };
 
 
