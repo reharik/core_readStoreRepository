@@ -58,6 +58,7 @@ module.exports = function(pgbluebird, uuid, logger) {
             var pgb = new pgbluebird();
             try {
                 console.log('options.connectionString + options.databasexxxxxxxxxxxxxxxxxxxxxx');
+                console.log(options);
                 console.log(options.connectionString + options.database);
                 var cnn = await pgb.connect(options.connectionString + options.database);
                 logger.info('getting last processed postion for eventHandler ' + eventHandlerName);
