@@ -9,7 +9,7 @@ module.exports = function(pgbluebird, uuid, logger) {
         var getById = async function(id, table) {
             var pgb = new pgbluebird();
             try {
-                var cnn    = pgb.connect(options.postgres.connectionString + options.postgres.database);
+                var cnn    = pgb.connect(options.connectionString + options.database);
                 var result = await cnn.client.query('SELECT * from "' + table + '" where "Id" = \'' + id + '\'');
                 var row    = result.rows;
                 cnn.done();
@@ -24,7 +24,7 @@ module.exports = function(pgbluebird, uuid, logger) {
             var pgb = new pgbluebird();
             var result;
             try {
-                var cnn = await pgb.connect(options.postgres.connectionString + options.postgres.database);
+                var cnn = await pgb.connect(options.connectionString + options.database);
                 if (id) {
                     result = await cnn.client.query('UPDATE "' + table + '" SET document = \'' + document + '\' where Id = \'' + id + '\'');
                 } else {
@@ -44,7 +44,7 @@ module.exports = function(pgbluebird, uuid, logger) {
             var pgb = new pgbluebird();
             var result;
             try {
-                var cnn = await pgb.connect(options.postgres.connectionString + options.postgres.database);
+                var cnn = await pgb.connect(options.connectionString + options.database);
                 result  = await cnn.client.query(script);
                 cnn.done();
                 return result;
@@ -57,7 +57,7 @@ module.exports = function(pgbluebird, uuid, logger) {
         var checkIdempotency = async function(originalPosition, eventHandlerName) {
             var pgb = new pgbluebird();
             try {
-                var cnn = await pgb.connect(options.postgres.connectionString + options.postgres.database);
+                var cnn = await pgb.connect(options.connectionString + options.database);
                 logger.info('getting last processed postion for eventHandler ' + eventHandlerName);
 
                 var result = await cnn.client.query('SELECT * from "lastProcessedPosition" where "handlerType" = \'' + eventHandlerName + '\'');
@@ -85,7 +85,7 @@ module.exports = function(pgbluebird, uuid, logger) {
                 throw new Error("ResolvedEvent didn't come off a subscription at all (has no position).");
             }
             try {
-                var cnn = await pgb.connect(options.postgres.connectionString + options.postgres.database);
+                var cnn = await pgb.connect(options.connectionString + options.database);
                 logger.trace('setting last process position for eventHandler ' + eventHandlerName + ': ' + originalPosition.commitPosition);
                 if (isNewSteam) {
                     logger.info("creating first position for handler: " + eventHandlerName);
