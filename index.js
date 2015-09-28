@@ -5,11 +5,11 @@ var extend = require('extend');
 
 module.exports = function(_options) {
     var options = {
-        "postgres": {
-            "connectionString": "postgres://postgres:password@postgres/",
-            "postgres": "postgres",
-            "methodFitness": "MethodFitness"
-        },
+        //"postgres": {
+        //    "connectionString": "postgres://postgres:password@postgres/",
+        //    "postgres": "postgres",
+        //    "methodFitness": "MethodFitness"
+        //},
         logger: {
             moduleName: 'ReadStoreRepository'
         }
