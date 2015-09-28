@@ -55,7 +55,7 @@ module.exports = function(pgbluebird, uuid, logger) {
         };
 
         var checkIdempotency = async function(originalPosition, eventHandlerName) {
-            if(eventHandlerName.toLowerCase().indexOf('bootstrap')){
+            if(eventHandlerName.toLowerCase().indexOf('bootstrap')>-1){
                 return{isIdempotent:true};
             }
             var pgb = new pgbluebird();
