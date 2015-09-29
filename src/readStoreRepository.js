@@ -44,6 +44,8 @@ module.exports = function(pgbluebird, uuid, logger) {
             var pgb = new pgbluebird();
             var result;
             try {
+                console.log('options.connectionString + options.databasezzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+                console.log(options.connectionString + options.database);
                 var cnn = await pgb.connect(options.connectionString + options.database);
                 result  = await cnn.client.query(script);
                 cnn.done();
