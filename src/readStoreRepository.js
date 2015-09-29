@@ -56,7 +56,7 @@ module.exports = function(pgbluebird, uuid, logger) {
 
         var checkIdempotency = async function(originalPosition, eventHandlerName) {
             if(eventHandlerName.toLowerCase().indexOf('bootstrap')>-1){
-                return{isIdempotent:true};
+                return{isIdempotent:true, isNewStream:true};
             }
             var pgb = new pgbluebird();
             try {
@@ -82,9 +82,6 @@ module.exports = function(pgbluebird, uuid, logger) {
         };
 
         var recordEventProcessed = async function(originalPosition, eventHandlerName, isNewSteam) {
-            if(eventHandlerName.toLowerCase().indexOf('bootstrap')){
-                return;
-            }
             var pgb = new pgbluebird();
             var result;
             if (!isNewSteam && !originalPosition.HasValue) {
