@@ -1,5 +1,4 @@
-#FROM xolocalvendors/nodebox:latest
-FROM node:latest
+FROM  mf_nodebox:latest
 
 MAINTAINER reharik@gmail.com
 
