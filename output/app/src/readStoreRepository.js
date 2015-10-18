@@ -1,6 +1,7 @@
 /**
  * Created by parallels on 7/22/15.
  */
+"use strict";
 
 module.exports = function (pgbluebird, uuid, logger) {
 
