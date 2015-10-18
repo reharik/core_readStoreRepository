@@ -1,6 +1,8 @@
 /**
  * Created by parallels on 9/5/15.
  */
+"use strict";
+
 var extend = require('extend');
 
 module.exports = function (_options) {
