@@ -2,16 +2,15 @@
  * Created by parallels on 7/22/15.
  */
 
+module.exports = function (pgbluebird, uuid, logger) {
 
-module.exports = function(pgbluebird, uuid, logger) {
-
-    return function(options) {
-        var getById = async function(id, table) {
+    return function (options) {
+        var getById = async function (id, table) {
             var pgb = new pgbluebird();
             try {
-                var cnn    = pgb.connect(options.connectionString + options.database);
+                var cnn = pgb.connect(options.connectionString + options.database);
                 var result = await cnn.client.query('SELECT * from "' + table + '" where "Id" = \'' + id + '\'');
-                var row    = result.rows;
+                var row = result.rows;
                 cnn.done();
                 return row.document;
             } catch (error) {
@@ -20,7 +19,7 @@ module.exports = function(pgbluebird, uuid, logger) {
             }
         };
 
-        var save = async function(table, document, id) {
+        var save = async function (table, document, id) {
             var pgb = new pgbluebird();
             var result;
             try {
@@ -30,7 +29,7 @@ module.exports = function(pgbluebird, uuid, logger) {
                 } else {
                     var statement = 'INSERT INTO "' + table + '" ("id", "document") VALUES (\'' + uuid.v4() + '\',\'' + JSON.stringify(document) + '\')';
                     logger.info(statement);
-                    result        = await cnn.client.query(statement);
+                    result = await cnn.client.query(statement);
                 }
                 cnn.done();
                 return 'success';
@@ -40,12 +39,12 @@ module.exports = function(pgbluebird, uuid, logger) {
             }
         };
 
-        var query = async function(script) {
+        var query = async function (script) {
             var pgb = new pgbluebird();
             var result;
             try {
                 var cnn = await pgb.connect(options.connectionString + options.database);
-                result  = await cnn.client.query(script);
+                result = await cnn.client.query(script);
                 cnn.done();
                 return result;
             } catch (error) {
@@ -54,9 +53,9 @@ module.exports = function(pgbluebird, uuid, logger) {
             }
         };
 
-        var checkIdempotency = async function(originalPosition, eventHandlerName) {
-            if(eventHandlerName.toLowerCase().indexOf('bootstrap')>-1){
-                return{isIdempotent:true, isNewStream:true};
+        var checkIdempotency = async function (originalPosition, eventHandlerName) {
+            if (eventHandlerName.toLowerCase().indexOf('bootstrap') > -1) {
+                return { isIdempotent: true, isNewStream: true };
             }
             var pgb = new pgbluebird();
             try {
@@ -64,16 +63,16 @@ module.exports = function(pgbluebird, uuid, logger) {
                 logger.info('getting last processed postion for eventHandler ' + eventHandlerName);
 
                 var result = await cnn.client.query('SELECT * from "lastProcessedPosition" where "handlerType" = \'' + eventHandlerName + '\'');
-                var row    = result.rows;
+                var row = result.rows;
                 logger.trace('last process position for eventHandler ' + eventHandlerName + ': ' + row.commitPosition);
                 cnn.done();
 
-                var isNewStream  = !row || row.length <= 0;
+                var isNewStream = !row || row.length <= 0;
                 var isIdempotent = isNewStream || row.CommitPosition < originalPosition.CommitPosition;
                 logger.info('eventHandler ' + eventHandlerName + ' event idempotence is: ' + isIdempotent);
                 return {
                     isIdempotent: isIdempotent,
-                    isNewStream : isNewStream
+                    isNewStream: isNewStream
                 };
             } catch (error) {
                 logger.error('error received during last process position call for eventHandler ' + eventHandlerName + ': ' + error.message);
@@ -81,7 +80,7 @@ module.exports = function(pgbluebird, uuid, logger) {
             }
         };
 
-        var recordEventProcessed = async function(originalPosition, eventHandlerName, isNewSteam) {
+        var recordEventProcessed = async function (originalPosition, eventHandlerName, isNewSteam) {
             var pgb = new pgbluebird();
             var result;
             if (!isNewSteam && !originalPosition.HasValue) {
@@ -92,16 +91,10 @@ module.exports = function(pgbluebird, uuid, logger) {
                 logger.trace('setting last process position for eventHandler ' + eventHandlerName + ': ' + originalPosition.commitPosition);
                 if (isNewSteam) {
                     logger.info("creating first position for handler: " + eventHandlerName);
-                    result = await cnn.client.query('INSERT INTO "lastProcessedPosition" ' +
-                        ' ("id", "commitPosition", "preparePosition", "handlerType")' +
-                        ' VALUES (\'' + uuid.v4() + '\', ' + originalPosition.CommitPosition + ', ' + originalPosition.PreparePosition + ', \'' + eventHandlerName + '\') ');
+                    result = await cnn.client.query('INSERT INTO "lastProcessedPosition" ' + ' ("id", "commitPosition", "preparePosition", "handlerType")' + ' VALUES (\'' + uuid.v4() + '\', ' + originalPosition.CommitPosition + ', ' + originalPosition.PreparePosition + ', \'' + eventHandlerName + '\') ');
                 } else {
                     logger.info("updating position for handler: " + eventHandlerName);
-                    result = await cnn.client.query('UPDATE "lastProcessedPosition"' +
-                        'SET "commitPosition" = ' + originalPosition.CommitPosition +
-                        ', "preparePosition" = ' + originalPosition.PreparePosition +
-                        ', "handlerType" = \'' + eventHandlerName +
-                        '\' WHERE Id = \'' + row.Id + '\'');
+                    result = await cnn.client.query('UPDATE "lastProcessedPosition"' + 'SET "commitPosition" = ' + originalPosition.CommitPosition + ', "preparePosition" = ' + originalPosition.PreparePosition + ', "handlerType" = \'' + eventHandlerName + '\' WHERE Id = \'' + row.Id + '\'');
                 }
                 cnn.done();
                 return result;
@@ -111,11 +104,11 @@ module.exports = function(pgbluebird, uuid, logger) {
             }
         };
         return {
-            getById             : getById,
-            save                : save,
-            query               : query,
-            checkIdempotency    : checkIdempotency,
+            getById: getById,
+            save: save,
+            query: query,
+            checkIdempotency: checkIdempotency,
             recordEventProcessed: recordEventProcessed
-        }
+        };
     };
 };

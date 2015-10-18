@@ -3,7 +3,7 @@
  */
 var extend = require('extend');
 
-module.exports = function(_options) {
+module.exports = function (_options) {
     var options = {
         //"postgres": {
         //    "connectionString": "postgres://postgres:password@postgres/",
@@ -19,5 +19,3 @@ module.exports = function(_options) {
     var container = require('./registry')(options);
     return container.getInstanceOf('readStoreRepository');
 };
-
-

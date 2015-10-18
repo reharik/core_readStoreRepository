@@ -4,19 +4,19 @@
 
 var Promise = require('bluebird');
 module.exports = {
-    getById: function(id, table) {
+    getById: function (id, table) {
         return Promise.resolve('success');
     },
-    save: function(table, document, id) {
+    save: function (table, document, id) {
         return Promise.resolve('success');
     },
-    query: function(script) {
+    query: function (script) {
         return Promise.resolve('success');
     },
-    checkIdempotency: function(originalPosition, eventHandlerName) {
-        return Promise.resolve({isIdempotent:true});
+    checkIdempotency: function (originalPosition, eventHandlerName) {
+        return Promise.resolve({ isIdempotent: true });
     },
-    recordEventProcessed: function(originalPosition, eventHandlerName, isNewSteam) {
+    recordEventProcessed: function (originalPosition, eventHandlerName, isNewSteam) {
         return Promise.resolve('success');
     }
 };
