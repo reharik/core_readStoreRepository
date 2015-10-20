@@ -2,21 +2,23 @@
  * Created by reharik on 8/15/15.
  */
 
+'use strict';
+
 var Promise = require('bluebird');
 module.exports = {
-    getById: function (id, table) {
+    getById: function getById(id, table) {
         return Promise.resolve('success');
     },
-    save: function (table, document, id) {
+    save: function save(table, document, id) {
         return Promise.resolve('success');
     },
-    query: function (script) {
+    query: function query(script) {
         return Promise.resolve('success');
     },
-    checkIdempotency: function (originalPosition, eventHandlerName) {
+    checkIdempotency: function checkIdempotency(originalPosition, eventHandlerName) {
         return Promise.resolve({ isIdempotent: true });
     },
-    recordEventProcessed: function (originalPosition, eventHandlerName, isNewSteam) {
+    recordEventProcessed: function recordEventProcessed(originalPosition, eventHandlerName, isNewSteam) {
         return Promise.resolve('success');
     }
 };
