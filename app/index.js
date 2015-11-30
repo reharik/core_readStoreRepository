@@ -19,7 +19,7 @@ module.exports = function(_options) {
     extend(options, _options || {});
 
     var container = require('./registry')(options);
-    return container.getInstanceOf('readStoreRepository');
+    return container.getInstanceOf('repository');
 };
 
 

@@ -14,6 +14,8 @@ module.exports = function(_options) {
             .requireDirectoryRecursively('./app/src')
             .for('bluebird').renameTo('Promise')
             .for('corelogger').renameTo('logger').instantiate(i=>i.asFunc().withParameters(options.logger || {}))
-            .for('readStoreRepository').instantiate(i=>i.asFunc().withParameters(options.postgres || {}))
+            .for('repository').instantiate(i=>i.asFunc().withParameters(options.postgres || {}))
+            .for('ramda').renameTo('R')
+            .for('ramdafantasy').renameTo('_fantasy')
             .complete());
 };

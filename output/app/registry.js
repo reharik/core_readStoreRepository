@@ -12,8 +12,8 @@ module.exports = function (_options) {
     return new container(function (x) {
         return x.pathToRoot(path.join(__dirname, '..')).requireDirectoryRecursively('./app/src')['for']('bluebird').renameTo('Promise')['for']('corelogger').renameTo('logger').instantiate(function (i) {
             return i.asFunc().withParameters(options.logger || {});
-        })['for']('readStoreRepository').instantiate(function (i) {
+        })['for']('repository').instantiate(function (i) {
             return i.asFunc().withParameters(options.postgres || {});
-        }).complete();
+        })['for']('ramda').renameTo('R')['for']('ramdafantasy').renameTo('_fantasy').complete();
     });
 };
