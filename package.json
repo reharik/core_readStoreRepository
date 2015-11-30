@@ -24,7 +24,7 @@
     "bluebird": "^2.9.27",
     "corelogger": "git+https://github.com/reharik/core_logger.git",
     "dagon": "git+https://github.com/reharik/dagon.git#local",
-    "eventmodels": "git+https://github.com/reharik/core_eventmodels.git#functional",
+    "eventmodels": "git+https://github.com/reharik/core_eventModels.git#functional",
     "extend": "^3.0.0",
     "pg": "^4.4.3",
     "pg-bluebird": "^1.0.8",
