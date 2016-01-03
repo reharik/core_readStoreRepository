@@ -17,8 +17,7 @@ module.exports = function(_options) {
         }
     };
     extend(options, _options || {});
-    return  registry(options);
-
+    return require('./registry')(options);
 };
 
 
