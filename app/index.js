@@ -17,9 +17,8 @@ module.exports = function(_options) {
         }
     };
     extend(options, _options || {});
+    return  registry(options);
 
-    var container = require('./registry')(options);
-    return container.getInstanceOf('repository');
 };
 
 
