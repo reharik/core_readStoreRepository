@@ -12,6 +12,6 @@ module.exports = function(_options) {
     return registry(x=>
         x.pathToRoot(path.join(__dirname,'..'))
             .requireDirectoryRecursively('./app/src')
-            .for('repository').instantiate(i=>i.asFunc().withParameters(options.postgres || {}))
-            .complete());
+            .requiredModuleRegistires(['eventmodels'])
+            .complete())
 };
