@@ -3,7 +3,8 @@
  */
 
 module.exports = function pgClient(pg){
-    return function(options) {
-        return new pg.client(options.connectionString + options.database);
+    return function(_options) {
+        var options = _options && _options.postgres ? _options.postgres : {};
+        return new pg.Client(options.connectionString + options.database);
     }
 };

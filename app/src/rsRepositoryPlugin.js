@@ -12,7 +12,7 @@ module.exports = function(pgClient, R, _fantasy, eventmodels, uuid, logger) {
         var pgFuture = function(query, handleResult) {
             return Future((rej, ret) => {
                 pgClient.connect(cErr => {
-                    if (cErr) {
+                    if(cErr) {
                         return rej(cErr);
                     }
                         pgClient.query(query, (err, result) => {
@@ -74,7 +74,6 @@ module.exports = function(pgClient, R, _fantasy, eventmodels, uuid, logger) {
 END IF`;
             var handlerResult = r=>_fantasy.Maybe.of(r);
             return pgFuture(query, handlerResult);
-
         };
 
         return {
