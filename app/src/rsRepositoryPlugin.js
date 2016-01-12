@@ -3,14 +3,16 @@
  */
 
 
-module.exports = function(pgClient, R, _fantasy, eventmodels, uuid, logger) {
+module.exports = function(pg, R, _fantasy, eventmodels, uuid, logger) {
 
-    return function() {
+    return function(_options) {
+        var options = _options && _options.postgres ? _options.postgres : {};
         var fh = eventmodels.functionalHelpers;
         var Future = _fantasy.Future;
 
         var pgFuture = function(query, handleResult) {
             return Future((rej, ret) => {
+                var pgClient = new pg.Client(options.connectionString + options.database);
                 pgClient.connect(cErr => {
                     if(cErr) {
                         return rej(cErr);
