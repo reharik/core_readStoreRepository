@@ -55,7 +55,19 @@ module.exports = function(pg, R, _fantasy, eventmodels, uuid, logger) {
             var query          = 'SELECT * from "lastProcessedPosition" where "handlerType" = \'' + eventHandlerName + '\'';
             var mGreater       = R.lift(R.gt);
             var curriedGreater = mGreater(fh.safeProp('CommitPosition', originalPosition));
-            var handlerResult  = R.compose(curriedGreater, fh.safeProp('CommitPosition'));
+
+            var handleRowIfPresent = R.compose(curriedGreater, R.map(fh.safeProp('CommitPosition'), fh.safeProp('rows')));
+
+            var handlerResult = x => {
+                var hasRows = mGreater(fh.safeProp('rowCount', x), R.identity.for(0));
+                if (hasRows === true) {
+                    return handleRowIfPresent(x);
+                } else {
+                    return Future((rej, res) => {
+                        res(true);
+                    });
+                }
+            };
 
             return pgFuture(query, handlerResult);
         };
