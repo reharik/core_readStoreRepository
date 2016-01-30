@@ -58,16 +58,9 @@ module.exports = function(pg, R, _fantasy, eventmodels, uuid, logger) {
 
             var handleRowIfPresent = R.compose(curriedGreater, R.map(fh.safeProp('CommitPosition'), fh.safeProp('rows')));
 
-            var handlerResult = x => {
-                var hasRows = mGreater(fh.safeProp('rowCount', x), R.identity.for(0));
-                if (hasRows === true) {
-                    return handleRowIfPresent(x);
-                } else {
-                    return Future((rej, res) => {
-                        res(true);
-                    });
-                }
-            };
+            var handlerResult = x => mGreater(fh.safeProp('rowCount', x), R.for(0))
+                    ? handleRowIfPresent(x)
+                    : true;
 
             return pgFuture(query, handlerResult);
         };
