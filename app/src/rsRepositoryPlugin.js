@@ -58,7 +58,7 @@ module.exports = function(pg, R, _fantasy, eventmodels, uuid, logger) {
 
             var handleRowIfPresent = R.compose(curriedGreater, R.map(fh.safeProp('CommitPosition'), fh.safeProp('rows')));
 
-            var handlerResult = x => mGreater(fh.safeProp('rowCount', x), R.for(0))
+            var handlerResult = x => R.map(mGreater(fh.safeProp('rowCount', x), R.of(0)))
                     ? handleRowIfPresent(x)
                     : true;
 
