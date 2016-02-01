@@ -55,30 +55,29 @@ module.exports = function(pg, R, _fantasy, eventmodels, uuid, logger) {
             var query          = 'SELECT * from "lastProcessedPosition" where "handlerType" = \'' + eventHandlerName + '\'';
             var mGreater       = R.lift(R.gt);
             var curriedGreater = mGreater(fh.safeProp('CommitPosition', originalPosition));
+            var takeFirst      = x => x[0];
+            var handleRowIfPresent = R.compose(curriedGreater, R.chain(fh.safeProp('commitPosition')), R.map(takeFirst), fh.safeProp('rows'));
 
-            var handleRowIfPresent = R.compose(curriedGreater, R.map(fh.safeProp('CommitPosition'), fh.safeProp('rows')));
-
-            var handlerResult = x => R.map(mGreater(fh.safeProp('rowCount', x), R.of(0)))
-                    ? handleRowIfPresent(x)
-                    : true;
+            var handlerResult = x => mGreater(fh.safeProp('rowCount', x), R.of(0))[0]
+                ? {isIdempotent: handleRowIfPresent(x).getOrElse(false)}
+                : {isIdempotent: true};
 
             return pgFuture(query, handlerResult);
         };
 
         var recordEventProcessed = function(originalPosition, eventHandlerName) {
-            var query = `IF EXISTS ( SELECT 1 from "lastProcessedPosition" where "handlerType" = '${eventHandlerName}')
- THEN
+            var query = `WITH UPSERT AS (
  UPDATE "lastProcessedPosition"
  SET "commitPosition" = '${originalPosition.CommitPosition}'
 , "preparePosition" = '${originalPosition.PreparePosition}'
 , "handlerType" =  '${eventHandlerName}'
- WHERE "handlerType" = '${eventHandlerName}'
- ELSE
+ WHERE "handlerType" = '${eventHandlerName}' )
  INSERT INTO "lastProcessedPosition"
  ("id", "commitPosition", "preparePosition", "handlerType")
- VALUES ( '${uuid.v4() }' , '${originalPosition.CommitPosition}'
-, '${originalPosition.PreparePosition}', '${eventHandlerName }' )
-END IF`;
+ SELECT '${uuid.v4() }' , '${originalPosition.CommitPosition}'
+, '${originalPosition.PreparePosition}', '${eventHandlerName }'
+WHERE NOT EXISTS ( SELECT 1 from "lastProcessedPosition" where "handlerType" = '${eventHandlerName}')`;
+
             var handlerResult = r=>_fantasy.Maybe.of(r);
             return pgFuture(query, handlerResult);
         };
