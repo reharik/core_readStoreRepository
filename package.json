@@ -4,7 +4,7 @@
   "private": false,
   "description": "core_readStoreRepository",
   "homepage": "https://github.com/reharik/core_readStoreRepository#readme",
-  "main": "output/app/index.js",
+  "main": "app/index.js",
   "scripts": {
     "test": "mocha --require ./app/babelhook --opts ./app/tests/mocha.opts ./app/tests/unitTests/*.js",
     "intTest": "mocha --require ./app/babelhook --opts ./app/tests/mocha.opts ./app/tests/integrationTests/*.js"
@@ -22,10 +22,14 @@
   "dependencies": {
     "JSON": "^1.0.0",
     "bluebird": "^2.9.27",
-    "corelogger": "git+https://github.com/reharik/core_logger.git",
-    "dagon": "git+https://github.com/reharik/dagon.git#local",
+    "corelogger": "git://github.com/reharik/core_logger.git",
+    "dagon": "git://github.com/reharik/dagon.git",
+    "eventmodels": "git://github.com/reharik/core_eventModels.git#functional",
     "extend": "^3.0.0",
+    "pg": "^4.4.3",
     "pg-bluebird": "^1.0.8",
+    "ramda": "^0.18.0",
+    "ramda-fantasy": "^0.4.1",
     "uuid": "^2.0.1"
   },
   "devDependencies": {
