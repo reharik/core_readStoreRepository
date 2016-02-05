@@ -51,10 +51,14 @@ module.exports = function(pg, R, _fantasy, eventmodels, uuid, logger) {
            return pgFuture(query, handlerResult);
        };
 
+
+        var getSafeProp = (src,prop) => R.map(fh.safeProp(prop), src);
+        var getValue = (src,prop,default) => getSafeProp(src,prop).getOrElse(default);
+
         var checkIdempotency = function(originalPosition, eventHandlerName) {
             var query          = 'SELECT * from "lastProcessedPosition" where "handlerType" = \'' + eventHandlerName + '\'';
             var mGreater       = R.lift(R.gt);
-            var curriedGreater = mGreater(fh.safeProp('CommitPosition', originalPosition));
+            var curriedGreater = mGreater(getSafeProp(originalPosition, 'CommitPosition'));
             var takeFirst      = x => x[0];
             var handleRowIfPresent = R.compose(curriedGreater, R.chain(fh.safeProp('commitPosition')), R.map(takeFirst), fh.safeProp('rows'));
 
@@ -65,17 +69,18 @@ module.exports = function(pg, R, _fantasy, eventmodels, uuid, logger) {
             return pgFuture(query, handlerResult);
         };
 
+
         var recordEventProcessed = function(originalPosition, eventHandlerName) {
             var query = `WITH UPSERT AS (
  UPDATE "lastProcessedPosition"
- SET "commitPosition" = '${originalPosition.CommitPosition}'
-, "preparePosition" = '${originalPosition.PreparePosition}'
+ SET "commitPosition" = '${getValue(originialPosition,'commitPosition','')}'
+, "preparePosition" = '${getValue(originialPosition,'PreparePosition','')}' 
 , "handlerType" =  '${eventHandlerName}'
  WHERE "handlerType" = '${eventHandlerName}' )
  INSERT INTO "lastProcessedPosition"
  ("id", "commitPosition", "preparePosition", "handlerType")
- SELECT '${uuid.v4() }' , '${originalPosition.CommitPosition}'
-, '${originalPosition.PreparePosition}', '${eventHandlerName }'
+ SELECT '${uuid.v4() }' , '${getValue(originialPosition,'commitPosition','')}'
+, '${getValue(originialPosition,'PreparePosition','')}', '${eventHandlerName }'
 WHERE NOT EXISTS ( SELECT 1 from "lastProcessedPosition" where "handlerType" = '${eventHandlerName}')`;
 
             var handlerResult = r=>_fantasy.Maybe.of(r);
