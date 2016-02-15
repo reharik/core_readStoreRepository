@@ -22,7 +22,7 @@ module.exports = function(pg, R, _fantasy, appfuncs, uuid, logger) {
                             rej(err);
                             return pgClient.end();
                         }
-                        ret(handleResult(result).getOrElse({}));
+                        ret(handleResult(result));
                         pgClient.end();
                     });
                 });
@@ -52,30 +52,32 @@ module.exports = function(pg, R, _fantasy, appfuncs, uuid, logger) {
         };
 
         var checkIdempotency = function(originalPosition, eventHandlerName) {
+
             var query              = 'SELECT * from "lastProcessedPosition" where "handlerType" = \'' + eventHandlerName + '\'';
             var mGreater           = R.lift(R.gt);
             var curriedGreater     = mGreater(fh.safeProp(originalPosition, 'CommitPosition'));
             var takeFirst          = x => x[0];
             var handleRowIfPresent = R.compose(curriedGreater, R.chain(fh.safeProp('commitPosition')), R.map(takeFirst), fh.safeProp('rows'));
-
-            var handlerResult = x => mGreater(fh.safeProp('rowCount', x), R.of(0))[0]
-                ? {isIdempotent: handleRowIfPresent(x).getOrElse(false)}
-                : {isIdempotent: true};
+            var handlerResult = x =>
+                mGreater(fh.safeProp('rowCount', x), R.of(0))[0]
+                    ? {isIdempotent: handleRowIfPresent(x).getOrElse(false)}
+                    : {isIdempotent: true};
 
             return pgFuture(query, handlerResult);
         };
 
         var recordEventProcessed = function(originalPosition, eventHandlerName) {
+
             var query = `WITH UPSERT AS (
  UPDATE "lastProcessedPosition"
- SET "commitPosition" = '${fh.getSafeValue(originalPosition, 'commitPosition', '')}'
-, "preparePosition" = '${fh.getSafeValue(originalPosition, 'PreparePosition', '')}'
+ SET "commitPosition" = '${fh.getSafeValue('commitPosition',originalPosition,  '')}'
+, "preparePosition" = '${fh.getSafeValue('PreparePosition', originalPosition, '')}'
 , "handlerType" =  '${eventHandlerName}'
  WHERE "handlerType" = '${eventHandlerName}' )
  INSERT INTO "lastProcessedPosition"
  ("id", "commitPosition", "preparePosition", "handlerType")
- SELECT '${uuid.v4() }' , '${fh.getSafeValue(originalPosition, 'commitPosition', '')}'
-, '${fh.getSafeValue(originalPosition, 'PreparePosition', '')}', '${eventHandlerName }'
+ SELECT '${uuid.v4() }' , '${fh.getSafeValue('commitPosition', originalPosition, '')}'
+, '${fh.getSafeValue('PreparePosition', originalPosition, '')}', '${eventHandlerName }'
 WHERE NOT EXISTS ( SELECT 1 from "lastProcessedPosition" where "handlerType" = '${eventHandlerName}')`;
 
             var handlerResult = r=>_fantasy.Maybe.of(r);
