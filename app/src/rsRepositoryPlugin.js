@@ -9,7 +9,6 @@ module.exports = function(pg, R, _fantasy, appfuncs, uuid, logger) {
         var options = _options && _options.postgres ? _options.postgres : {};
         var fh      = appfuncs.functionalHelpers;
         var Future  = _fantasy.Future;
-
         var pgFuture = function(query, handleResult) {
             return Future((rej, ret) => {
                 var pgClient = new pg.Client(options.connectionString + options.database);
@@ -22,7 +21,8 @@ module.exports = function(pg, R, _fantasy, appfuncs, uuid, logger) {
                             rej(fh.loggerTap(err,'error'));
                             return pgClient.end();
                         }
-                        ret(fh.loggerTap(handleResult(result),'debug'));
+                        var payload = handleResult(result);
+                        ret(fh.loggerTap(payload,'debug', JSON.stringify(payload)));
                         pgClient.end();
                     });
                 });
